@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Missing Voices: USA</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #map {
+            height: 600px;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .section {
+            background: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Missing Voices: United States</h1>
+    <p>Click a state to explore cases.</p>
+</header>
+
+<div id="map"></div>
+
+<div class="content">
+    <div class="section">
+        <h2>About This Project</h2>
+        <p>
+            This project maps cases of missing women across the United States,
+            highlighting patterns and underreported stories.
+        </p>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    var map = L.map('map').setView([37.8, -96], 4); // USA view
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Load US states GeoJSON
+    fetch("https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json")
+.then(response => {
+    if (!response.ok) {
+        throw new Error("Failed to load GeoJSON");
+    }
+    return response.json();
+})
+.then(data => {
+    console.log("GeoJSON loaded:", data); // 👈 DEBUG
+
+    function style(feature) {
+        return {
+            fillColor: "#0077cc",
+            weight: 1,
+            opacity: 1,
+            color: "white",
+            fillOpacity: 0.5
+        };
+    }
+
+    function onEachFeature(feature, layer) {
+        layer.on({
+            click: function(e) {
+                var stateName = feature.properties.name;
+
+                var content = `
+                    <b>${stateName}</b><br><br>
+                    Cases coming soon.
+                `;
+
+                layer.bindPopup(content).openPopup();
+            }
+        });
+    }
+
+    L.geoJson(data, {
+        style: style,
+        onEachFeature: onEachFeature
+    }).addTo(map);
+})
+.catch(error => {
+    console.error("ERROR:", error);
+    alert("Map failed to load. Open console (right click → inspect)");
+});
+
+</script>
+
+</body>
+</html>
