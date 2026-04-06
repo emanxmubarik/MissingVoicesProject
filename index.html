@@ -3,37 +3,45 @@
 <head>
     <title>The Missing People Project</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            text-align: center;
         }
 
         header {
             background: #111;
             color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        #map {
-            height: 600px;
+            padding: 40px 20px;
         }
 
         .content {
-            padding: 20px;
             max-width: 800px;
             margin: auto;
+            padding: 20px;
         }
 
         .section {
             background: white;
-            padding: 15px;
+            padding: 20px;
             margin-top: 20px;
             border-radius: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #0077cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .btn:hover {
+            background: #005fa3;
         }
     </style>
 </head>
@@ -41,78 +49,33 @@
 <body>
 
 <header>
-    <h1>Missing Voices: United States</h1>
-    <p>Click a state to explore cases.</p>
+    <h1>The Missing People Project</h1>
+    <p>Mapping overlooked cases. Amplifying stories. Demanding accountability.</p>
 </header>
 
-<div id="map"></div>
-
 <div class="content">
+
     <div class="section">
-        <h2>About This Project</h2>
+        <h2>Our Mission</h2>
         <p>
-            This project maps cases of missing women across the United States,
-            highlighting patterns and underreported stories.
+            The Missing People Project is dedicated to documenting and mapping cases of missing individuals—
+            especially those that receive limited media attention. This platform aims to bring visibility to
+            overlooked stories and uncover patterns that demand accountability.
         </p>
     </div>
+
+    <div class="section">
+        <h2>Why This Matters</h2>
+        <p>
+            Many missing persons cases—particularly involving marginalized communities—are underreported
+            and forgotten. This project ensures that these individuals are not ignored, and that their
+            stories are seen, shared, and remembered.
+        </p>
+
+        <a href="map.html" class="btn">Explore the Map →</a>
+    </div>
+
 </div>
-
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<script>
-    var map = L.map('map').setView([37.8, -96], 4); // USA view
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    // Load US states GeoJSON
-    fetch("https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json")
-.then(response => {
-    if (!response.ok) {
-        throw new Error("Failed to load GeoJSON");
-    }
-    return response.json();
-})
-.then(data => {
-    console.log("GeoJSON loaded:", data); // 👈 DEBUG
-
-    function style(feature) {
-        return {
-            fillColor: "#0077cc",
-            weight: 1,
-            opacity: 1,
-            color: "white",
-            fillOpacity: 0.5
-        };
-    }
-
-    function onEachFeature(feature, layer) {
-        layer.on({
-            click: function(e) {
-                var stateName = feature.properties.name;
-
-                var content = `
-                    <b>${stateName}</b><br><br>
-                    Cases coming soon.
-                `;
-
-                layer.bindPopup(content).openPopup();
-            }
-        });
-    }
-
-    L.geoJson(data, {
-        style: style,
-        onEachFeature: onEachFeature
-    }).addTo(map);
-})
-.catch(error => {
-    console.error("ERROR:", error);
-    alert("Map failed to load. Open console (right click → inspect)");
-});
-
-</script>
 
 </body>
 </html>
